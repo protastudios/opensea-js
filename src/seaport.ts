@@ -161,7 +161,7 @@ export class OpenSeaPort {
   ) {
     // API config
     apiConfig.networkName = apiConfig.networkName || Network.Main;
-    this.api = new OpenSeaAPI(apiConfig);
+    this.api = new OpenSeaAPI(apiConfig, logger);
 
     this._networkName = apiConfig.networkName;
 

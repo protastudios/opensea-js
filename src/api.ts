@@ -49,7 +49,8 @@ export class OpenSeaAPI {
    */
   public logger: (arg: string) => void;
 
-  private apiKey: string | undefined;
+  private readonly apiKey: string | undefined;
+  private readonly sleepy: number | undefined;
 
   /**
    * Create an instance of the OpenSea API
@@ -70,6 +71,8 @@ export class OpenSeaAPI {
         this.hostUrl = SITE_HOST_MAINNET;
         break;
     }
+
+    this.sleepy = config.sleepy
 
     // Debugging: default to nothing
     this.logger = logger || ((arg: string) => arg);
@@ -373,6 +376,11 @@ export class OpenSeaAPI {
       },
     };
 
+    if (this.sleepy) {
+      this.logger(`Proactively sleeping ${this.sleepy} ms before fetch`);
+      await delay(this.sleepy);
+    }
+
     this.logger(
       `Sending request: ${finalUrl} ${JSON.stringify(finalOpts).substr(
         0,
@@ -418,6 +426,11 @@ export class OpenSeaAPI {
       case 404:
         errorMessage = `Not found. Full message was '${JSON.stringify(
           result
+        )}'`;
+        break;
+      case 429:
+        errorMessage = `Rate Limited! Add more sleepy! Full message was '${JSON.stringify(
+            result
         )}'`;
         break;
       case 500:

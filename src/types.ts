@@ -98,6 +98,7 @@ export interface OpenSeaAPIConfig {
   useReadOnlyProvider?: boolean;
   // Sent to WyvernJS
   gasPrice?: BigNumber;
+  sleepy?: number; // delay before sending any api call
 }
 
 /**
